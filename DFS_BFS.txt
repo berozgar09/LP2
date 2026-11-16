@@ -1,0 +1,138 @@
+
+import java.util.Scanner;
+import java.util.Queue;
+import java.util.LinkedList;
+
+public class GraphTraversal {
+
+    static int graph[][];
+    static boolean visited[];
+
+    // Depth First Search
+    static void DFS(int vertex, int n) {
+
+        visited[vertex] = true;
+        System.out.print(vertex + " ");
+
+        for (int i = 0; i < n; i++) {
+
+            if (graph[vertex][i] == 1 && !visited[i]) {
+                DFS(i, n);
+            }
+        }
+    }
+
+    // Breadth First Search
+    static void BFS(int start, int n) {
+
+        Queue<Integer> queue = new LinkedList<>();
+
+        visited = new boolean[n];
+
+        visited[start] = true;
+        queue.add(start);
+
+        while (!queue.isEmpty()) {
+
+            int vertex = queue.poll();
+            System.out.print(vertex + " ");
+
+            for (int i = 0; i < n; i++) {
+
+                if (graph[vertex][i] == 1 && !visited[i]) {
+
+                    visited[i] = true;
+                    queue.add(i);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of vertices: ");
+        int n = sc.nextInt();
+
+        graph = new int[n][n];
+
+        System.out.print("Enter number of edges: ");
+        int e = sc.nextInt();
+
+        System.out.println("Enter edges (vertex1 vertex2):");
+
+        for (int i = 0; i < e; i++) {
+
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+
+            graph[u][v] = 1;
+            graph[v][u] = 1;
+        }
+
+        System.out.print("Enter starting vertex: ");
+        int start = sc.nextInt();
+
+        // Perform DFS
+        visited = new boolean[n];
+
+        System.out.print("DFS Traversal: ");
+        DFS(start, n);
+
+        // Perform BFS
+        System.out.print("\nBFS Traversal: ");
+        BFS(start, n);
+
+        sc.close();
+    }
+}
+
+
+
+1. Theory
+A Graph is a non-linear data structure consisting of vertices (nodes) and edges (connections).
+
+Graph traversal is the process of visiting all the vertices of a graph.
+
+There are two main graph traversal algorithms:
+
+1. Depth First Search (DFS):
+
+DFS is a graph traversal algorithm that explores a graph deeply before backtracking. It uses recursion or a stack to visit vertices.
+
+2. Breadth First Search (BFS):
+
+BFS is a graph traversal algorithm that visits all adjacent vertices first and then moves to the next level. It uses a queue data structure.
+2. Code Explanation
+1. Scanner Class: Used to accept input from the user.
+2. Graph Array: A two-dimensional array is used to represent the graph using an adjacency matrix.
+3. Visited Array: Keeps track of visited vertices to avoid visiting the same vertex again.
+4. DFS Method: Visits a vertex and recursively explores its unvisited adjacent vertices.
+5. BFS Method: Uses a queue to visit vertices level by level.
+6. Queue: Stores vertices waiting to be visited.
+7. Main Method: Accepts the number of vertices, edges and starting vertex, then performs DFS and BFS traversal.
+3. Working of the Program
+1. First, the user enters the number of vertices and edges.
+2. The graph is created using an adjacency matrix.
+3. The user enters the starting vertex.
+4. DFS traversal is performed using recursion.
+5. BFS traversal is performed using a queue.
+6. Finally, both traversal sequences are displayed.
+4. Difference Between DFS and BFS
+DFS	BFS
+Depth-wise traversal	Level-wise traversal
+Uses Stack / Recursion	Uses Queue
+Backtracking is used	Level-by-level searching
+May not find shortest path	Finds shortest path in an unweighted graph
+
+5. Time Complexity
+- DFS: \(O(V^2)\)
+- BFS: \(O(V^2)\)
+For adjacency matrix representation, where V is the number of vertices.
+6. Applications
+- Web crawling
+- Social network analysis
+- Path finding
+- Network traversal
+- Maze solving

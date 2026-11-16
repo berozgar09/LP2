@@ -1,0 +1,189 @@
+
+import java.util.*;
+
+public class AStar {
+
+    static class Node {
+        int vertex;
+        int gCost;
+        int hCost;
+        int fCost;
+
+        Node(int vertex, int gCost, int hCost) {
+            this.vertex = vertex;
+            this.gCost = gCost;
+            this.hCost = hCost;
+            this.fCost = gCost + hCost;
+        }
+    }
+
+    static void printPath(int parent[], int node) {
+
+        if (node == -1)
+            return;
+
+        printPath(parent, parent[node]);
+        System.out.print(node + " ");
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        // Graph representation
+        int graph[][] = {
+            {0, 1, 4, 0, 0},
+            {1, 0, 2, 5, 0},
+            {4, 2, 0, 1, 3},
+            {0, 5, 1, 0, 2},
+            {0, 0, 3, 2, 0}
+        };
+
+        // Heuristic values
+        int heuristic[] = {7, 6, 2, 1, 0};
+
+        int n = 5;
+
+        System.out.print("Enter starting node (0-4): ");
+        int start = sc.nextInt();
+
+        System.out.print("Enter goal node (0-4): ");
+        int goal = sc.nextInt();
+
+        if (start < 0 || start >= n || goal < 0 || goal >= n) {
+            System.out.println("Invalid node!");
+            sc.close();
+            return;
+        }
+
+        int cost[] = new int[n];
+        int parent[] = new int[n];
+        boolean visited[] = new boolean[n];
+
+        Arrays.fill(cost, Integer.MAX_VALUE);
+        Arrays.fill(parent, -1);
+
+        PriorityQueue<Node> pq =
+            new PriorityQueue<>(
+                (a, b) -> Integer.compare(a.fCost, b.fCost)
+            );
+
+        cost[start] = 0;
+
+        pq.add(new Node(start, 0, heuristic[start]));
+
+        while (!pq.isEmpty()) {
+
+            Node current = pq.poll();
+
+            int u = current.vertex;
+
+            if (visited[u])
+                continue;
+
+            visited[u] = true;
+
+            if (u == goal)
+                break;
+
+            for (int v = 0; v < n; v++) {
+
+                if (graph[u][v] > 0 && !visited[v]) {
+
+                    int newCost = cost[u] + graph[u][v];
+
+                    if (newCost < cost[v]) {
+
+                        cost[v] = newCost;
+                        parent[v] = u;
+
+                        pq.add(new Node(
+                            v,
+                            newCost,
+                            heuristic[v]
+                        ));
+                    }
+                }
+            }
+        }
+
+        if (cost[goal] == Integer.MAX_VALUE) {
+
+            System.out.println("Path not found");
+
+        } else {
+
+            System.out.println("Shortest Cost: " + cost[goal]);
+
+            System.out.print("Shortest Path: ");
+            printPath(parent, goal);
+        }
+
+        sc.close();
+    }
+}
+
+
+A* (A-Star) is an informed search algorithm used to find the shortest path between a starting node and a goal node.
+
+It uses three important values:
+1. g(n): Actual cost from the starting node to the current node.
+2. h(n): Estimated cost from the current node to the goal node.
+3. f(n): Total estimated cost.
+Formula:
+\[
+f(n)=g(n)+h(n)
+\]
+
+A* selects the node having the lowest f-cost and explores it first.
+4. Code Explanation
+Code	Explanation
+class Node	Stores information about each node.
+vertex	Stores the node number.
+gCost	Actual cost from the starting node.
+hCost	Estimated cost to reach the goal.
+fCost	Total cost (g + h).
+graph[][]	Stores connections and edge costs.
+heuristic[]	Stores estimated costs to the goal.
+cost[]	Stores the minimum known cost to each node.
+parent[]	Stores the previous node to reconstruct the path.
+visited[]	Keeps track of visited nodes.
+PriorityQueue	Selects the node with the lowest f-cost.
+printPath()	Displays the final path.
+
+5. Working Logic
+1. Create a graph with nodes and edge costs.
+2. Store heuristic values for all nodes.
+3. Take starting and goal nodes from the user.
+4. Initialize the cost array with infinity.
+5. Insert the starting node into the Priority Queue.
+6. Select the node with the lowest f-cost.
+7. Calculate the cost of its neighbouring nodes.
+8. Update the cost and parent if a better path is found.
+9. Repeat until the goal node is reached.
+10. Display the shortest path and total cost.
+6. Important Viva Questions
+Q1. What is A algorithm?*
+
+A* is an informed search algorithm used to find the shortest path.
+
+Q2. What is the formula of A algorithm?*
+\[
+f(n)=g(n)+h(n)
+\]
+
+Q3. What is a heuristic function?
+
+It estimates the remaining cost from the current node to the goal.
+
+Q4. What is Priority Queue?
+
+It is a data structure that processes elements according to priority.
+
+Q5. Where is A algorithm used?*
+- Game development
+- GPS navigation
+- Robot pathfinding
+Q6. What is the difference between BFS and A?*
+
+BFS explores nodes level by level, whereas A* uses actual cost and heuristic cost to select nodes.

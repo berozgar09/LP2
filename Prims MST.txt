@@ -1,0 +1,143 @@
+
+import java.util.Scanner;
+
+public class Prims {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of vertices: ");
+        int n = sc.nextInt();
+
+        if (n <= 0) {
+            System.out.println("Invalid number of vertices!");
+            sc.close();
+            return;
+        }
+
+        int graph[][] = new int[n][n];
+
+        System.out.println("Enter adjacency matrix:");
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                graph[i][j] = sc.nextInt();
+
+                if (graph[i][j] < 0) {
+                    System.out.println("Invalid negative weight!");
+                    sc.close();
+                    return;
+                }
+            }
+        }
+
+        // Check diagonal values and symmetry
+        for (int i = 0; i < n; i++) {
+            if (graph[i][i] != 0) {
+                System.out.println("Invalid diagonal values!");
+                sc.close();
+                return;
+            }
+
+            for (int j = i + 1; j < n; j++) {
+                if (graph[i][j] != graph[j][i]) {
+                    System.out.println("Graph must be undirected!");
+                    sc.close();
+                    return;
+                }
+            }
+        }
+
+        boolean visited[] = new boolean[n];
+        visited[0] = true;
+
+        int edges = 0;
+        int totalCost = 0;
+
+        System.out.println("\nEdges in Minimum Spanning Tree:");
+
+        while (edges < n - 1) {
+
+            int min = Integer.MAX_VALUE;
+            int u = -1, v = -1;
+
+            for (int i = 0; i < n; i++) {
+
+                if (visited[i]) {
+
+                    for (int j = 0; j < n; j++) {
+
+                        if (!visited[j] && graph[i][j] > 0
+                                && graph[i][j] < min) {
+
+                            min = graph[i][j];
+                            u = i;
+                            v = j;
+                        }
+                    }
+                }
+            }
+
+            if (u == -1) {
+                System.out.println("Graph is disconnected!");
+                sc.close();
+                return;
+            }
+
+            System.out.println(u + " - " + v + " : " + min);
+
+            visited[v] = true;
+            totalCost += min;
+            edges++;
+        }
+
+        System.out.println("Total Minimum Cost: " + totalCost);
+
+        sc.close();
+    }
+}
+
+
+Enter number of vertices: 4
+Enter adjacency matrix:
+0 10 6 5
+10 0 0 15
+6 0 0 4
+5 15 4 0
+
+4. Short Code Logic Explanation
+1. Scanner: Takes the number of vertices and adjacency matrix as input.
+2. Validation: Checks negative weights, diagonal values and graph symmetry.
+3. visited[]: Stores which vertices are already selected.
+4. Start: Begins from vertex 0.
+5. Minimum Edge: Finds the smallest edge connecting a visited vertex to an unvisited vertex.
+6. Update: Marks the selected vertex as visited and adds its cost.
+7. Disconnected Check: If no valid edge is available before selecting n-1 edges, the graph is disconnected.
+8. Final Output: Displays selected MST edges and total minimum cost.
+5. Important Viva Questions
+Q1. What is Prim's Algorithm?
+
+It is a Greedy algorithm used to find the Minimum Spanning Tree.
+
+Q2. What is MST?
+
+MST connects all vertices with minimum total edge weight without forming a cycle.
+
+Q3. How many edges are present in MST?
+
+V - 1 edges.
+
+Q4. What is the use of visited array?
+
+It keeps track of visited vertices.
+
+Q5. What happens if the graph is disconnected?
+
+MST cannot be formed.
+
+Q6. What is the starting vertex in this program?
+
+Vertex 0.
+6. Conclusion
+Thus, Prim's algorithm is successfully implemented in Java to find the Minimum Spanning Tree of a connected weighted undirected graph.

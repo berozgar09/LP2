@@ -1,0 +1,174 @@
+
+import java.util.Scanner;
+
+public class Dijkstra {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of vertices: ");
+        int n = sc.nextInt();
+
+        if (n <= 0) {
+            System.out.println("Invalid number of vertices!");
+            sc.close();
+            return;
+        }
+
+        int graph[][] = new int[n][n];
+
+        System.out.println("Enter adjacency matrix:");
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+
+                graph[i][j] = sc.nextInt();
+
+                if (graph[i][j] < 0) {
+                    System.out.println("Negative weights not allowed!");
+                    sc.close();
+                    return;
+                }
+            }
+        }
+
+        // Check diagonal and symmetry
+        for (int i = 0; i < n; i++) {
+
+            if (graph[i][i] != 0) {
+                System.out.println("Diagonal values must be zero!");
+                sc.close();
+                return;
+            }
+
+            for (int j = i + 1; j < n; j++) {
+
+                if (graph[i][j] != graph[j][i]) {
+                    System.out.println("Graph must be undirected!");
+                    sc.close();
+                    return;
+                }
+            }
+        }
+
+        System.out.print("Enter source vertex: ");
+        int source = sc.nextInt();
+
+        if (source < 0 || source >= n) {
+            System.out.println("Invalid source vertex!");
+            sc.close();
+            return;
+        }
+
+        int distance[] = new int[n];
+        boolean visited[] = new boolean[n];
+
+        for (int i = 0; i < n; i++) {
+            distance[i] = Integer.MAX_VALUE;
+        }
+
+        distance[source] = 0;
+
+        for (int count = 0; count < n - 1; count++) {
+
+            int min = Integer.MAX_VALUE;
+            int u = -1;
+
+            // Find minimum distance vertex
+            for (int i = 0; i < n; i++) {
+
+                if (!visited[i] && distance[i] < min) {
+                    min = distance[i];
+                    u = i;
+                }
+            }
+
+            if (u == -1)
+                break;
+
+            visited[u] = true;
+
+            // Update neighbouring vertices
+            for (int v = 0; v < n; v++) {
+
+                if (!visited[v] && graph[u][v] > 0
+                        && distance[u] != Integer.MAX_VALUE
+                        && distance[u] + graph[u][v] < distance[v]) {
+
+                    distance[v] = distance[u] + graph[u][v];
+                }
+            }
+        }
+
+        System.out.println("\nShortest distances from source " + source + ":");
+
+        for (int i = 0; i < n; i++) {
+
+            if (distance[i] == Integer.MAX_VALUE) {
+                System.out.println("To vertex " + i + " = Not reachable");
+            } else {
+                System.out.println("To vertex " + i + " = " + distance[i]);
+            }
+        }
+
+        sc.close();
+    }
+}
+
+
+
+Enter number of vertices: 5
+
+Enter adjacency matrix:
+0 10 0 5 0
+10 0 1 2 0
+0 1 0 9 4
+5 2 9 0 2
+0 0 4 2 0
+
+Enter source vertex: 0
+
+___OUTPUT
+
+Shortest distances from source 0:
+To vertex 0 = 0
+To vertex 1 = 7
+To vertex 2 = 8
+To vertex 3 = 5
+To vertex 4 = 7
+
+
+4. Short Code Logic Explanation
+1. Graph: Stores connections and weights using an adjacency matrix.
+2. distance[]: Stores the shortest known distance from the source.
+3. visited[]: Tracks visited vertices.
+4. Initialization: Source distance is set to 0, and other distances are set to infinity.
+5. Minimum selection: Selects the unvisited vertex having the smallest distance.
+6. Update distance: Checks neighbouring vertices and updates their distance if a shorter path is found.
+7. Repeat: Continues until all reachable vertices are processed.
+8. Output: Displays shortest distances from the source vertex.
+5. Important Viva Questions
+Q1. What is Dijkstra's algorithm?
+
+It is a Greedy algorithm used to find the shortest path from one source vertex to other vertices.
+
+Q2. What is the use of distance array?
+
+It stores the shortest known distance from the source.
+
+Q3. Can Dijkstra's algorithm handle negative weights?
+
+No, it is not suitable for graphs with negative edge weights.
+
+Q4. What is the starting vertex called?
+
+Source vertex.
+
+Q5. Which technique does Dijkstra's algorithm use?
+
+Greedy technique.
+
+Q6. What is its time complexity in this program?
+
+\(O(V^2)\), because it uses an adjacency matrix and linear search.

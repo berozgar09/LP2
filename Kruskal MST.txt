@@ -1,0 +1,175 @@
+
+import java.util.*;
+
+public class Kruskals {
+
+    static class Edge {
+        int src, dest, weight;
+
+        Edge(int src, int dest, int weight) {
+            this.src = src;
+            this.dest = dest;
+            this.weight = weight;
+        }
+    }
+
+    static int find(int parent[], int i) {
+        if (parent[i] != i)
+            parent[i] = find(parent, parent[i]);
+
+        return parent[i];
+    }
+
+    static void union(int parent[], int rank[], int x, int y) {
+
+        int rootX = find(parent, x);
+        int rootY = find(parent, y);
+
+        if (rootX == rootY)
+            return;
+
+        if (rank[rootX] < rank[rootY]) {
+            parent[rootX] = rootY;
+        }
+        else if (rank[rootX] > rank[rootY]) {
+            parent[rootY] = rootX;
+        }
+        else {
+            parent[rootY] = rootX;
+            rank[rootX]++;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of vertices: ");
+        int n = sc.nextInt();
+
+        System.out.print("Enter number of edges: ");
+        int m = sc.nextInt();
+
+        if (n <= 0 || m < 0) {
+            System.out.println("Invalid input!");
+            sc.close();
+            return;
+        }
+
+        Edge edges[] = new Edge[m];
+
+        System.out.println("Enter edges (source destination weight):");
+
+        for (int i = 0; i < m; i++) {
+
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            int w = sc.nextInt();
+
+            if (u < 0 || u >= n || v < 0 || v >= n
+                    || u == v || w <= 0) {
+
+                System.out.println("Invalid edge input!");
+                sc.close();
+                return;
+            }
+
+            edges[i] = new Edge(u, v, w);
+        }
+
+        // Sort edges by weight
+        Arrays.sort(edges,
+            (a, b) -> Integer.compare(a.weight, b.weight));
+
+        int parent[] = new int[n];
+        int rank[] = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+
+        int count = 0;
+        int totalCost = 0;
+
+        System.out.println("\nEdges in Minimum Spanning Tree:");
+
+        for (Edge e : edges) {
+
+            int x = find(parent, e.src);
+            int y = find(parent, e.dest);
+
+            // Check cycle
+            if (x != y) {
+
+                System.out.println(
+                    e.src + " - " + e.dest + " : " + e.weight
+                );
+
+                totalCost += e.weight;
+                union(parent, rank, x, y);
+                count++;
+
+                if (count == n - 1)
+                    break;
+            }
+        }
+
+        if (count != n - 1) {
+            System.out.println("Graph is disconnected!");
+        } else {
+            System.out.println("Total Minimum Cost: " + totalCost);
+        }
+
+        sc.close();
+    }
+}
+
+
+Enter number of vertices: 4
+Enter number of edges: 5
+Enter edges (source destination weight):
+0 1 10
+0 2 6
+0 3 5
+1 3 15
+2 3 4
+
+Edges in Minimum Spanning Tree:
+2 - 3 : 4
+0 - 3 : 5
+0 - 1 : 10
+Total Minimum Cost: 19
+
+
+4. Short Code Logic Explanation
+1. Edge class: Stores source, destination and weight of each edge.
+2. find(): Finds the parent of a vertex.
+3. union(): Combines two different sets.
+4. Sorting: Sorts all edges in increasing order of weight.
+5. Cycle checking: If both vertices have the same parent, selecting that edge creates a cycle, so skip it.
+6. MST selection: Select the edge if it does not create a cycle.
+7. Final result: Stop after selecting V-1 edges and display total cost.
+5. Important Viva Questions
+Q1. What is Kruskal's Algorithm?
+
+It is a Greedy algorithm used to find the Minimum Spanning Tree.
+
+Q2. Which data structure is used in Kruskal's algorithm?
+
+Disjoint Set (Union-Find).
+
+Q3. Why do we sort edges?
+
+To select the minimum-weight edge first.
+
+Q4. Why do we use the find() method?
+
+To find the set or parent of a vertex.
+
+Q5. What is the use of union()?
+
+To combine two different sets.
+
+Q6. How many edges are required in MST?
+
+V-1 edges.

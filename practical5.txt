@@ -1,0 +1,80 @@
+// 5. Chatbot
+
+import java.util.Scanner;
+
+public class Chatbot {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        String input;
+
+        System.out.println("================================");
+        System.out.println("       WELCOME TO CHATBOT       ");
+        System.out.println("================================");
+        System.out.println("You can ask me simple questions.");
+        System.out.println("Type 'bye' to exit.");
+
+        while (true) {
+
+            System.out.print("\nYou: ");
+            input = sc.nextLine().trim().toLowerCase();
+
+            if (input.equals("hi") || input.equals("hello")
+                    || input.equals("hey")) {
+
+                System.out.println("Bot: Hello! How can I help you?");
+            }
+
+            else if (input.contains("your name")
+                    || input.equals("name")) {
+
+                System.out.println("Bot: I am a Simple Java Chatbot.");
+            }
+
+            else if (input.contains("how are you")) {
+
+                System.out.println("Bot: I am fine. Thank you!");
+            }
+
+            else if (input.contains("time")) {
+
+                System.out.println("Bot: Current time is "
+                        + java.time.LocalTime.now()
+                        .withNano(0));
+            }
+
+            else if (input.contains("date")) {
+
+                System.out.println("Bot: Today's date is "
+                        + java.time.LocalDate.now());
+            }
+
+            else if (input.contains("help")) {
+
+                System.out.println("Bot: Sure! I am here to help you.");
+            }
+
+            else if (input.equals("bye")
+                    || input.equals("exit")) {
+
+                System.out.println("Bot: Goodbye! Have a nice day.");
+                break;
+            }
+
+            else if (input.isEmpty()) {
+
+                System.out.println("Bot: Please enter something.");
+            }
+
+            else {
+
+                System.out.println(
+                    "Bot: Sorry, I don't understand your question."
+                );
+            }
+        }
+
+        sc.close();
+    }
+}
